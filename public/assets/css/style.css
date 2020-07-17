@@ -4,7 +4,11 @@ html, body {
   padding: 0;
 }
 
-#logo {
+.navbar {
+  height: 80px;
+}
+
+.logo {
   margin-right: 30px;
 }
 
