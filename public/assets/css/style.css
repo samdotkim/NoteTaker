@@ -6,6 +6,7 @@ html, body {
 
 .navbar {
   height: 80px;
+  margin-bottom: 80px;
 }
 
 .logo {
