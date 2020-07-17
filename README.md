@@ -27,3 +27,4 @@ The following API routes are used:
 1. Node.JS
 2. Express
 3. Bootstrap CSS
+4. jQuery
