@@ -1,46 +1,35 @@
-/* DEPENDENCIES */
+/* dependencies */
 const express = require('express');
 const path = require('path');
 const fs = require ('fs');
-
-const notesArray = require("./db/db.json");
-
-/* SETS UP THE EXPRESS APP */
+const arrayNotes = require("./db/db.json");
+/* express app setup */
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-/* SETS UP THE EXPRESS APP TO HANDLE DATA PARSING */
+/* express app data parsing setup */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Use /public as root folder
+// use /public as root folder
 app.use(express.static(__dirname + '/public'));
-
-/* STARTS THE SERVER TO BEGIN LISTENING */
+/* start server */
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
 });
 
-
-/* ROUTES */
-
-// GETs
-
-// Basic routes that take user to each HTML page
+// GET routes
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"));
 });
-
 app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
 });
-
-// Returns all notes from notesArray when getNotes() is called in index.js
+// Returns all notes from arrayNotes when getNotes() is called in index.js
 app.get("/api/notes", function (req, res) {
     return res.json(JSON.parse(fs.readFileSync("./db/db.json")));
 });
 
 
-// POSTs
+// POST routes
 
 // Route for saving a note to db.json
 app.post("/api/notes", function (req, res) {
@@ -48,11 +37,11 @@ app.post("/api/notes", function (req, res) {
     let newNoteRequest = req.body;
     console.log("New request: ", newNoteRequest);
 
-    notesArray.push(newNoteRequest);
-    // Set id property of newNoteRequest to its index in notesArray
-    newNoteRequest.id = notesArray.indexOf(newNoteRequest);
+    arrayNotes.push(newNoteRequest);
+    // Set id property of newNoteRequest to its index in arrayNotes
+    newNoteRequest.id = arrayNotes.indexOf(newNoteRequest);
 
-    fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
+    fs.writeFileSync("./db/db.json", JSON.stringify(arrayNotes));
     
     res.json({
         isError: false,
@@ -65,13 +54,13 @@ app.post("/api/notes", function (req, res) {
 });
 
 
-// DELETEs
+// DELETE Routes
 
 app.delete("/api/notes/:id", function (req, res) {
-    // id is index of note in notesArray
+    // id is index of note in arrayNotes
     let id = parseInt(req.params.id);
-    // Use id index to remove item from notesArray
-    let removeItemArray = notesArray.filter(item => item.id != id);
+    // Use id index to remove item from arrayNotes
+    let removeItemArray = arrayNotes.filter(item => item.id != id);
 
     removeItemArray.forEach(element => element.id = removeItemArray.indexOf(element));
 

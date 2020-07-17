@@ -1,36 +1,29 @@
-/* DOM SELECTORS */
-// -------------------------------------------------------------------
-
-// For a single note
-const $noteTitle = $(".note-title");
-const $noteText = $(".note-textarea");
-const $saveNoteBtn = $(".save-note");
-const $newNoteBtn = $(".new-note");
-const $newNoteIcon = $(".fa-pen .new-note");
-
+// single note DOM
+const $titleNote = $(".note-title");
+const $textNote = $(".note-textarea");
+const $btnSaveNote = $(".save-note");
+const $btnNewNote = $(".new-note");
+const $iconNewNote = $(".fa-pen .new-note");
 // Note list ul
 const $noteList = $(".list-container .list-group");
-
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-
-
-/* CLICK EVENTS */
+/* On Click Events */
 // -------------------------------------------------------------------
 
 $(document).ready(function () {
   console.log('Welcome to Notiker: A NodeJS and Express powered note-taking app');
-  // When typing noteTitle or noteText, check if a note's title or text are empty - hide or show the save button
-  $noteTitle.on("keyup", handleRenderSaveBtn);
-  $noteText.on("keyup", handleRenderSaveBtn);
+  // When typing titleNote or textNote, check if a note's title or text are empty - hide or show the save button
+  $titleNote.on("keyup", handleRenderSaveBtn);
+  $textNote.on("keyup", handleRenderSaveBtn);
 
   // When Save button is clicked, handleNoteSave and save note
-  $saveNoteBtn.on("click", handleNoteSave);
+  $btnSaveNote.on("click", handleNoteSave);
 
   // When New button is clicked, allow user to enter a new note
-  $newNoteBtn.on("click", handleNewNoteView);
-  $newNoteIcon.on("click", handleNewNoteView);
+  $btnNewNote.on("click", handleNewNoteView);
+  $iconNewNote.on("click", handleNewNoteView);
 
   // When list item is clicked, display it as the activeNote
   $noteList.on("click", ".list-group-item", handleNoteView);
@@ -38,13 +31,7 @@ $(document).ready(function () {
   $noteList.on("click", ".delete-note", handleNoteDelete);
 });
 
-
-
-/* FUNCTIONS FOR PAGE FUNCTIONALITY */
-// -------------------------------------------------------------------
-
 /* Displaying an Active Note */
-// -------------------------------------------------------------------
 // Sets the activeNote and displays it
 const handleNoteView = function () {
   activeNote = $(this).data();
@@ -54,30 +41,30 @@ const handleNoteView = function () {
 // If there is an activeNote, display it, otherwise render empty inputs
 const renderActiveNote = function () {
   // Hide Save button
-  $saveNoteBtn.hide();
+  $btnSaveNote.hide();
 
   // If there is an id, set attributes to read-only
   // Otherwise, keep note fields blank
   if (activeNote.id >= 0) {
-    $noteTitle.attr("readonly", true);
-    $noteText.attr("readonly", true);
-    $noteTitle.val(activeNote.title);
-    $noteText.val(activeNote.text);
+    $titleNote.attr("readonly", true);
+    $textNote.attr("readonly", true);
+    $titleNote.val(activeNote.title);
+    $textNote.val(activeNote.text);
   } else {
-    $noteTitle.attr("readonly", false);
-    $noteText.attr("readonly", false);
-    $noteTitle.val("");
-    $noteText.val("");
+    $titleNote.attr("readonly", false);
+    $textNote.attr("readonly", false);
+    $titleNote.val("");
+    $textNote.val("");
   }
 };
 
 // If a note's title or text are empty, hide the save button
 // Or else show it
 const handleRenderSaveBtn = function () {
-  if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
-    $saveNoteBtn.hide();
+  if (!$titleNote.val().trim() || !$textNote.val().trim()) {
+    $btnSaveNote.hide();
   } else {
-    $saveNoteBtn.show();
+    $btnSaveNote.show();
   }
 };
 
@@ -87,9 +74,6 @@ const handleNewNoteView = function () {
   renderActiveNote();
 };
 
-
-
-
 /* Saving a Note */
 // -------------------------------------------------------------------
 
@@ -97,8 +81,8 @@ const handleNewNoteView = function () {
 const handleNoteSave = function () {
   // Create a new note
   let newNote = {
-    title: $noteTitle.val(),
-    text: $noteText.val()
+    title: $titleNote.val(),
+    text: $textNote.val()
   };
 
   // Pass newNote to saveNote route to POST note
@@ -118,10 +102,7 @@ const saveNote = function (newNote) {
   });
 };
 
-
-
-/* Deleting a Note */
-// -------------------------------------------------------------------
+/* DELETE NOTE */
 
 // Delete the clicked note
 const handleNoteDelete = function (event) {
@@ -151,9 +132,7 @@ const deleteNote = function (id) {
 };
 
 
-
 /* Displaying Existing Notes */
-// -------------------------------------------------------------------
 
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = function () {
@@ -190,7 +169,6 @@ const renderNoteList = function (notes) {
 
   $noteList.append(noteListItems);
 };
-
 
 // Gets and renders the initial list of notes
 getAndRenderNotes();
